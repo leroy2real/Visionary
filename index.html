@@ -3,162 +3,403 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Visionary — YouTube Intelligence</title>
+<title>Visionary — YouTube Idea Ranker</title>
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
 :root {
-  --bg:#000;--surface:#0a0a0a;--surface2:#111;--surface3:#1a1a1a;
-  --border:rgba(255,255,255,0.08);--border-hover:rgba(255,255,255,0.16);
-  --text:#f5f5f7;--text-muted:rgba(245,245,247,0.5);--text-faint:rgba(245,245,247,0.25);
-  --gold:#d4a843;--gold-light:#f0c76a;--gold-dim:rgba(212,168,67,0.15);
-  --blue:#0a84ff;--green:#30d158;--red:#ff453a;--purple:#bf5af2;
-  --radius:18px;--radius-sm:10px;
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface2: #111111;
+  --surface3: #1a1a1a;
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.16);
+  --text: #f5f5f7;
+  --text-muted: rgba(245,245,247,0.5);
+  --text-faint: rgba(245,245,247,0.25);
+  --gold: #d4a843;
+  --gold-light: #f0c76a;
+  --gold-dim: rgba(212,168,67,0.15);
+  --blue: #0a84ff;
+  --green: #30d158;
+  --red: #ff453a;
+  --radius: 18px;
+  --radius-sm: 10px;
 }
-html{scroll-behavior:smooth;}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;top:-40vh;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(212,168,67,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
-.app{max-width:820px;margin:0 auto;padding:3rem 1.5rem 6rem;position:relative;z-index:1;}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Background ambient */
+body::before {
+  content: '';
+  position: fixed;
+  top: -40vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(ellipse, rgba(212,168,67,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app { max-width: 780px; margin: 0 auto; padding: 4rem 1.5rem 6rem; position: relative; z-index: 1; }
 
 /* Nav */
-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:4rem;}
-.logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--text);}
-.logo span{color:var(--gold);font-style:italic;}
-.nav-tag{font-size:11px;font-weight:300;color:var(--text-faint);letter-spacing:0.12em;text-transform:uppercase;}
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5rem;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+.logo span { color: var(--gold); font-style: italic; }
+.nav-tag {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 
-/* Tabs */
-.tabs{display:flex;gap:2px;background:var(--surface2);border:0.5px solid var(--border);border-radius:12px;padding:4px;margin-bottom:3rem;width:fit-content;}
-.tab{padding:9px 22px;border-radius:9px;font-size:13px;font-weight:400;color:var(--text-muted);cursor:pointer;border:none;background:none;font-family:'Outfit',sans-serif;transition:all 0.2s;letter-spacing:0.02em;}
-.tab.active{background:var(--surface3);color:var(--text);border:0.5px solid var(--border-hover);}
+/* Hero */
+.hero { text-align: center; margin-bottom: 4rem; }
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.25rem;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+.hero h1 em { font-style: italic; color: var(--gold-light); }
+.hero p {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto;
+}
 
-/* Section titles */
-.section-eyebrow{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;}
-.section-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:400;margin-bottom:0.5rem;}
-.section-sub{font-size:14px;font-weight:300;color:var(--text-muted);margin-bottom:2rem;line-height:1.6;}
+/* Card */
+.card {
+  background: var(--surface2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--border-hover); }
 
-/* Cards */
-.card{background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.75rem;margin-bottom:1rem;transition:border-color 0.2s;}
-.card:hover{border-color:var(--border-hover);}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.card-title {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.idea-count {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-weight: 300;
+}
 
-/* Inputs */
-.input-row{display:flex;gap:10px;margin-bottom:1.5rem;}
-.field-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem;}
-.field-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);}
-input[type=text],input[type=password]{width:100%;background:var(--surface3);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:13px 16px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:300;color:var(--text);outline:none;transition:border-color 0.2s,background 0.2s;}
-input::placeholder{color:var(--text-faint);}
-input:focus{border-color:rgba(212,168,67,0.4);background:#1c1c1c;}
+/* Idea input */
+.idea-input-wrap { display: flex; gap: 10px; margin-bottom: 2rem; }
+.idea-input {
+  flex: 1;
+  background: var(--surface3);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.idea-input::placeholder { color: var(--text-faint); }
+.idea-input:focus { border-color: rgba(212,168,67,0.4); background: #1f1f1f; }
 
-/* Buttons */
-.btn-gold{width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.06em;cursor:pointer;transition:background 0.2s,transform 0.1s;}
-.btn-gold:hover{background:var(--gold-light);}
-.btn-gold:active{transform:scale(0.99);}
-.btn-gold:disabled{opacity:0.35;cursor:not-allowed;}
-.btn-outline{padding:10px 20px;background:transparent;color:var(--text-muted);border:0.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;}
-.btn-outline:hover{border-color:var(--border-hover);color:var(--text);}
+/* Sliders section */
+.sliders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; }
+@media(max-width:520px){ .sliders-grid { grid-template-columns: 1fr; } }
 
-/* Sliders */
-.sliders-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.75rem;}
-@media(max-width:520px){.sliders-grid{grid-template-columns:1fr;}}
-.slider-label-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
-.slider-name{font-size:12px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);}
-.slider-val{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold-light);}
-input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;background:var(--surface3);outline:none;cursor:pointer;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);border:2px solid #000;box-shadow:0 0 8px rgba(212,168,67,0.4);transition:transform 0.15s;}
-input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.15);}
-.slider-desc{font-size:11px;color:var(--text-faint);margin-top:6px;font-weight:300;}
+.slider-item {}
+.slider-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.slider-name {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.slider-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--gold-light);
+  min-width: 24px;
+  text-align: right;
+}
 
-/* Rank cards */
-.rank-card{background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:10px;display:grid;grid-template-columns:48px 1fr auto;gap:1.25rem;align-items:center;transition:border-color 0.2s,transform 0.2s;animation:slideIn 0.4s cubic-bezier(0.16,1,0.3,1) both;}
-.rank-card:hover{border-color:var(--border-hover);transform:translateY(-1px);}
-.rank-card.rank-1{border-color:rgba(212,168,67,0.35);background:linear-gradient(135deg,#111100,#0a0a0a);}
-@keyframes slideIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.rank-number{font-family:'Playfair Display',serif;font-size:2rem;color:var(--text-faint);text-align:center;line-height:1;}
-.rank-card.rank-1 .rank-number{color:var(--gold);}
-.rank-idea-title{font-size:15px;font-weight:400;color:var(--text);margin-bottom:6px;line-height:1.3;}
-.rank-pills{display:flex;gap:6px;flex-wrap:wrap;}
-.pill{font-size:10px;font-weight:400;letter-spacing:0.06em;text-transform:uppercase;padding:3px 9px;border-radius:99px;border:0.5px solid;}
-.pill-trend{color:#5ac8fa;border-color:rgba(90,200,250,0.25);background:rgba(90,200,250,0.06);}
-.pill-hook{color:#ff9f0a;border-color:rgba(255,159,10,0.25);background:rgba(255,159,10,0.06);}
-.pill-ret{color:#30d158;border-color:rgba(48,209,88,0.25);background:rgba(48,209,88,0.06);}
-.pill-orig{color:#bf5af2;border-color:rgba(191,90,242,0.25);background:rgba(191,90,242,0.06);}
-.rank-right{text-align:right;}
-.rank-score{font-family:'Playfair Display',serif;font-size:2rem;color:var(--text);line-height:1;margin-bottom:4px;}
-.rank-card.rank-1 .rank-score{color:var(--gold-light);}
-.rank-score-label{font-size:10px;color:var(--text-faint);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
-.rank-views{font-size:12px;font-weight:500;}
-.rank-views-label{font-size:10px;color:var(--text-faint);font-weight:300;}
-.delete-btn{display:none;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:16px;padding:4px;border-radius:6px;transition:color 0.15s,background 0.15s;}
-.rank-card:hover .delete-btn{display:block;}
-.delete-btn:hover{color:var(--red);background:rgba(255,69,58,0.1);}
-.score-bar-wrap{margin-top:10px;display:flex;align-items:center;gap:8px;}
-.score-bar-bg{flex:1;height:2px;background:var(--surface3);border-radius:2px;}
-.score-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--surface3);
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid #000;
+  box-shadow: 0 0 8px rgba(212,168,67,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+input[type=range]:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+  box-shadow: 0 0 14px rgba(212,168,67,0.6);
+}
+input[type=range]::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--gold); border: 2px solid #000; cursor: pointer;
+}
 
-/* API key banner */
-.api-banner{background:var(--surface2);border:0.5px solid rgba(212,168,67,0.2);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem;}
-.api-banner-title{font-size:13px;font-weight:500;color:var(--gold);margin-bottom:6px;}
-.api-banner-sub{font-size:12px;color:var(--text-faint);font-weight:300;margin-bottom:1rem;line-height:1.6;}
-.api-key-row{display:flex;gap:8px;}
-.api-key-row input{flex:1;font-family:monospace;font-size:13px;}
-.key-status{font-size:11px;margin-top:8px;font-weight:300;}
-.key-status.ok{color:var(--green);}
-.key-status.err{color:var(--red);}
+.slider-desc {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 6px;
+  font-weight: 300;
+}
 
-/* Competitor cards */
-.comp-card{background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;animation:slideIn 0.4s cubic-bezier(0.16,1,0.3,1) both;}
-.comp-header{display:flex;align-items:center;gap:1rem;padding:1.25rem 1.5rem;cursor:pointer;transition:background 0.15s;}
-.comp-header:hover{background:var(--surface3);}
-.comp-avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;background:var(--surface3);flex-shrink:0;border:0.5px solid var(--border);}
-.comp-avatar-placeholder{width:48px;height:48px;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);flex-shrink:0;border:0.5px solid var(--border);}
-.comp-meta{flex:1;min-width:0;}
-.comp-name{font-size:15px;font-weight:400;color:var(--text);margin-bottom:3px;}
-.comp-handle{font-size:12px;color:var(--text-faint);font-weight:300;}
-.comp-stats-row{display:flex;gap:1.5rem;margin-top:6px;}
-.comp-stat{font-size:12px;color:var(--text-muted);}
-.comp-stat strong{color:var(--text);font-weight:500;}
-.comp-chevron{color:var(--text-faint);font-size:18px;transition:transform 0.2s;flex-shrink:0;}
-.comp-card.open .comp-chevron{transform:rotate(180deg);}
-.comp-videos{display:none;padding:0 1.5rem 1.5rem;border-top:0.5px solid var(--border);}
-.comp-card.open .comp-videos{display:block;}
-.video-row{display:flex;align-items:center;gap:1rem;padding:12px 0;border-bottom:0.5px solid var(--border);}
-.video-row:last-child{border-bottom:none;}
-.video-thumb{width:80px;height:45px;border-radius:6px;object-fit:cover;background:var(--surface3);flex-shrink:0;}
-.video-info{flex:1;min-width:0;}
-.video-title{font-size:13px;font-weight:400;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.video-meta{font-size:11px;color:var(--text-faint);font-weight:300;}
-.video-views{font-size:13px;font-weight:500;color:var(--gold-light);text-align:right;white-space:nowrap;flex-shrink:0;}
-.comp-remove{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:18px;padding:4px;border-radius:6px;flex-shrink:0;transition:color 0.15s;}
-.comp-remove:hover{color:var(--red);}
+/* Add button */
+.add-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--gold);
+  color: #000;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, opacity 0.2s;
+}
+.add-btn:hover { background: var(--gold-light); }
+.add-btn:active { transform: scale(0.99); }
+.add-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
-/* Loading spinner */
-.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(212,168,67,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:8px;}
-@keyframes spin{to{transform:rotate(360deg);}}
+/* Rankings */
+.rankings-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.rankings-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+.clear-btn {
+  font-size: 12px;
+  color: var(--text-faint);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: color 0.15s;
+}
+.clear-btn:hover { color: var(--red); }
 
-/* Search results dropdown */
-.search-results{background:var(--surface3);border:0.5px solid var(--border-hover);border-radius:var(--radius-sm);margin-top:4px;overflow:hidden;display:none;}
-.search-results.show{display:block;}
-.search-result-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background 0.15s;}
-.search-result-item:hover{background:var(--surface2);}
-.search-result-item img{width:36px;height:36px;border-radius:50%;object-fit:cover;}
-.search-result-name{font-size:13px;color:var(--text);}
-.search-result-subs{font-size:11px;color:var(--text-faint);}
+/* Rank card */
+.rank-card {
+  background: var(--surface2);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 1.25rem;
+  align-items: center;
+  transition: border-color 0.2s, transform 0.2s;
+  animation: slideIn 0.4s cubic-bezier(0.16,1,0.3,1) both;
+}
+.rank-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+.rank-card.rank-1 { border-color: rgba(212,168,67,0.35); background: linear-gradient(135deg, #111100 0%, #0a0a0a 100%); }
 
-/* Empty */
-.empty{text-align:center;padding:3rem 0;color:var(--text-faint);}
-.empty-icon{font-size:2.5rem;margin-bottom:1rem;opacity:0.4;}
-.empty p{font-size:14px;font-weight:300;line-height:1.7;}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rank-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--text-faint);
+  text-align: center;
+  line-height: 1;
+}
+.rank-card.rank-1 .rank-number { color: var(--gold); }
+
+.rank-info {}
+.rank-idea-title {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.rank-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 99px;
+  border: 0.5px solid;
+}
+.pill-trend { color: #5ac8fa; border-color: rgba(90,200,250,0.25); background: rgba(90,200,250,0.06); }
+.pill-hook { color: #ff9f0a; border-color: rgba(255,159,10,0.25); background: rgba(255,159,10,0.06); }
+.pill-ret { color: #30d158; border-color: rgba(48,209,88,0.25); background: rgba(48,209,88,0.06); }
+.pill-orig { color: #bf5af2; border-color: rgba(191,90,242,0.25); background: rgba(191,90,242,0.06); }
+
+.rank-right { text-align: right; }
+.rank-score {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.rank-card.rank-1 .rank-score { color: var(--gold-light); }
+.rank-score-label {
+  font-size: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.rank-views {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--green);
+}
+.rank-views-label {
+  font-size: 10px;
+  color: var(--text-faint);
+  font-weight: 300;
+}
+.delete-btn {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  line-height: 1;
+  display: none;
+}
+.rank-card:hover .delete-btn { display: block; }
+.delete-btn:hover { color: var(--red); background: rgba(255,69,58,0.1); }
+
+/* Score bar */
+.score-bar-wrap { margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+.score-bar-bg { flex: 1; height: 2px; background: var(--surface3); border-radius: 2px; }
+.score-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%); transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
+.rank-card.rank-1 .score-bar-fill { background: linear-gradient(90deg, var(--gold) 0%, #fff4c2 100%); }
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--text-faint);
+}
+.empty-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+.empty p { font-size: 14px; font-weight: 300; line-height: 1.7; }
 
 /* Divider */
-.divider{height:0.5px;background:var(--border);margin:2rem 0;}
+.divider { height: 0.5px; background: var(--border); margin: 2.5rem 0; }
 
-/* Scale ref */
-.scale-ref{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem;}
-.scale-dot{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-faint);font-weight:300;}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+/* Views scale reference */
+.scale-ref {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+.scale-dot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-faint);
+  font-weight: 300;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); opacity: 0.5; }
+.dot.d2 { opacity: 0.6; }
+.dot.d3 { opacity: 0.7; }
+.dot.d4 { opacity: 0.85; }
+.dot.d5 { opacity: 1; background: var(--gold-light); }
 
-/* Rankings header */
-.rankings-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;}
-.rankings-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;}
+/* Crown badge */
+.crown { font-size: 11px; margin-left: 6px; }
 </style>
 </head>
 <body>
@@ -166,410 +407,210 @@ input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.15);}
 
   <nav>
     <div class="logo">Vi<span>sion</span>ary</div>
-    <div class="nav-tag">YouTube Intelligence</div>
+    <div class="nav-tag">Content Intelligence</div>
   </nav>
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('ranker',this)">Idea Ranker</button>
-    <button class="tab" onclick="switchTab('competitors',this)">Competitor Tracker</button>
+  <div class="hero">
+    <div class="hero-eyebrow">YouTube Idea Ranker</div>
+    <h1>Know which idea to<br/><em>film next.</em></h1>
+    <p>Score each video concept across four dimensions. Visionary ranks them and predicts your view potential.</p>
   </div>
 
-  <!-- ═══════════════ RANKER TAB ═══════════════ -->
-  <div id="tab-ranker">
-    <div class="section-eyebrow">Content Strategy</div>
-    <div class="section-title">Rank your ideas</div>
-    <div class="section-sub">Score each concept across four dimensions. Visionary tells you what to film next.</div>
-
-    <div class="scale-ref">
-      <div class="scale-dot"><div class="dot" style="opacity:.5"></div>1pt = 1k views</div>
-      <div class="scale-dot"><div class="dot" style="opacity:.6"></div>2pt = 30k views</div>
-      <div class="scale-dot"><div class="dot" style="opacity:.7"></div>3pt = 60k views</div>
-      <div class="scale-dot"><div class="dot" style="opacity:.85"></div>4pt = 200k views</div>
-      <div class="scale-dot"><div class="dot" style="opacity:1;background:var(--gold-light)"></div>5pt = 1M views</div>
-    </div>
-
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
-        <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-faint);">New idea</div>
-        <div style="font-size:11px;color:var(--text-faint);" id="idea-count">0 ideas</div>
-      </div>
-      <div class="input-row">
-        <input type="text" id="idea-input" placeholder="Describe your video idea…" maxlength="120" onkeydown="if(event.key==='Enter')addIdea()"/>
-      </div>
-      <div class="sliders-grid">
-        <div>
-          <div class="slider-label-row"><div class="slider-name">Trending</div><div class="slider-val" id="val-trend">3</div></div>
-          <input type="range" min="1" max="5" value="3" oninput="syncVal('trend',this.value)"/>
-          <div class="slider-desc" id="desc-trend">Riding a current wave</div>
-        </div>
-        <div>
-          <div class="slider-label-row"><div class="slider-name">Hook</div><div class="slider-val" id="val-hook">3</div></div>
-          <input type="range" min="1" max="5" value="3" oninput="syncVal('hook',this.value)"/>
-          <div class="slider-desc" id="desc-hook">Solid opening premise</div>
-        </div>
-        <div>
-          <div class="slider-label-row"><div class="slider-name">Retention</div><div class="slider-val" id="val-ret">3</div></div>
-          <input type="range" min="1" max="5" value="3" oninput="syncVal('ret',this.value)"/>
-          <div class="slider-desc" id="desc-ret">Keeps viewers watching</div>
-        </div>
-        <div>
-          <div class="slider-label-row"><div class="slider-name">Originality</div><div class="slider-val" id="val-orig">3</div></div>
-          <input type="range" min="1" max="5" value="3" oninput="syncVal('orig',this.value)"/>
-          <div class="slider-desc" id="desc-orig">Fresh angle on content</div>
-        </div>
-      </div>
-      <button class="btn-gold" onclick="addIdea()">Add to Rankings</button>
-    </div>
-
-    <div class="divider"></div>
-
-    <div id="ranker-empty" class="empty">
-      <div class="empty-icon">✦</div>
-      <p>Add your first idea above.<br/>Visionary will rank them by potential.</p>
-    </div>
-    <div id="rankings-section" style="display:none">
-      <div class="rankings-header">
-        <div class="rankings-title">Your Rankings</div>
-        <button class="btn-outline" onclick="clearIdeas()" style="padding:6px 14px;font-size:12px;">Clear all</button>
-      </div>
-      <div id="rankings-list"></div>
-    </div>
+  <div class="scale-ref">
+    <div class="scale-dot"><div class="dot d1"></div>1pt = 1k views</div>
+    <div class="scale-dot"><div class="dot d2"></div>2pt = 30k views</div>
+    <div class="scale-dot"><div class="dot d3"></div>3pt = 60k views</div>
+    <div class="scale-dot"><div class="dot d4"></div>4pt = 200k views</div>
+    <div class="scale-dot"><div class="dot d5"></div>5pt = 1M views</div>
   </div>
 
-  <!-- ═══════════════ COMPETITORS TAB ═══════════════ -->
-  <div id="tab-competitors" style="display:none">
-    <div class="section-eyebrow">Market Intelligence</div>
-    <div class="section-title">Competitor Tracker</div>
-    <div class="section-sub">Track any YouTube channel in real time. See their latest videos, view counts, and subscriber growth.</div>
-
-    <!-- API Key -->
-    <div class="api-banner">
-      <div class="api-banner-title">YouTube API Key</div>
-      <div class="api-banner-sub">Your key is stored only in your browser — never sent anywhere except directly to YouTube's servers.</div>
-      <div class="api-key-row">
-        <input type="password" id="api-key-input" placeholder="Paste your YouTube API key here…" oninput="onKeyInput()"/>
-        <button class="btn-outline" onclick="saveKey()" style="white-space:nowrap;flex-shrink:0;">Save key</button>
-      </div>
-      <div class="key-status" id="key-status"></div>
+  <!-- Input card -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">New idea</div>
+      <div class="idea-count" id="idea-count">0 ideas ranked</div>
     </div>
 
-    <!-- Search -->
-    <div class="card" id="search-card">
-      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;">Add a competitor</div>
-      <div style="position:relative;">
-        <input type="text" id="channel-search" placeholder="Search channel name or paste @handle…" oninput="onSearchInput()" onkeydown="if(event.key==='Enter')searchChannels()"/>
-        <div class="search-results" id="search-results"></div>
-      </div>
-      <div style="margin-top:10px;display:flex;gap:8px;">
-        <button class="btn-gold" onclick="searchChannels()" id="search-btn" style="flex:1;">Search</button>
-      </div>
-      <div id="search-status" style="font-size:12px;color:var(--text-faint);margin-top:10px;min-height:18px;"></div>
+    <div class="idea-input-wrap">
+      <input class="idea-input" type="text" id="idea-input" placeholder="Describe your video idea…" maxlength="120" />
     </div>
 
-    <!-- Competitors list -->
-    <div id="comp-empty" class="empty">
-      <div class="empty-icon">◎</div>
-      <p>No competitors tracked yet.<br/>Search for a channel above to get started.</p>
+    <div class="sliders-grid">
+      <div class="slider-item">
+        <div class="slider-label-row">
+          <div class="slider-name">Trending</div>
+          <div class="slider-val" id="val-trend">3</div>
+        </div>
+        <input type="range" min="1" max="5" value="3" id="sl-trend" oninput="syncVal('trend',this.value)" />
+        <div class="slider-desc" id="desc-trend">Riding a current wave</div>
+      </div>
+      <div class="slider-item">
+        <div class="slider-label-row">
+          <div class="slider-name">Hook</div>
+          <div class="slider-val" id="val-hook">3</div>
+        </div>
+        <input type="range" min="1" max="5" value="3" id="sl-hook" oninput="syncVal('hook',this.value)" />
+        <div class="slider-desc" id="desc-hook">Solid opening premise</div>
+      </div>
+      <div class="slider-item">
+        <div class="slider-label-row">
+          <div class="slider-name">Retention</div>
+          <div class="slider-val" id="val-ret">3</div>
+        </div>
+        <input type="range" min="1" max="5" value="3" id="sl-ret" oninput="syncVal('ret',this.value)" />
+        <div class="slider-desc" id="desc-ret">Keeps viewers watching</div>
+      </div>
+      <div class="slider-item">
+        <div class="slider-label-row">
+          <div class="slider-name">Originality</div>
+          <div class="slider-val" id="val-orig">3</div>
+        </div>
+        <input type="range" min="1" max="5" value="3" id="sl-orig" oninput="syncVal('orig',this.value)" />
+        <div class="slider-desc" id="desc-orig">Fresh angle on content</div>
+      </div>
     </div>
-    <div id="comp-list"></div>
+
+    <button class="add-btn" id="add-btn" onclick="addIdea()">Add to Rankings</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Rankings -->
+  <div id="rankings-section" style="display:none">
+    <div class="rankings-header">
+      <div class="rankings-title">Your Rankings</div>
+      <button class="clear-btn" onclick="clearAll()">Clear all</button>
+    </div>
+    <div id="rankings-list"></div>
+  </div>
+
+  <div id="empty-state" class="empty">
+    <div class="empty-icon">✦</div>
+    <p>Add your first idea above.<br/>Visionary will rank them by potential.</p>
   </div>
 
 </div>
 
 <script>
-// ─── Helpers ───────────────────────────────────────────────
-function fmtNum(n){
-  n=parseInt(n)||0;
-  if(n>=1000000)return(n/1000000).toFixed(1)+'M';
-  if(n>=1000)return(n/1000).toFixed(1)+'K';
-  return n.toString();
-}
-function timeAgo(iso){
-  const s=Math.floor((Date.now()-new Date(iso))/1000);
-  if(s<60)return 'just now';
-  if(s<3600)return Math.floor(s/60)+'m ago';
-  if(s<86400)return Math.floor(s/3600)+'h ago';
-  if(s<2592000)return Math.floor(s/86400)+'d ago';
-  return Math.floor(s/2592000)+'mo ago';
-}
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-// ─── Tab switching ──────────────────────────────────────────
-function switchTab(tab,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('tab-ranker').style.display=tab==='ranker'?'block':'none';
-  document.getElementById('tab-competitors').style.display=tab==='competitors'?'block':'none';
-}
-
-// ─── RANKER ────────────────────────────────────────────────
-const SLIDER_DESCS={
-  trend:['','Unlikely to be searched','Low search demand','Riding a current wave','Highly trending topic','Viral moment — act fast'],
-  hook:['','Weak opening concept','Some intrigue present','Solid opening premise','Very compelling hook','Unmissable first 5 seconds'],
-  ret:['','Viewers will drop off fast','Some engaging moments','Keeps viewers watching','Strong pacing & payoff','People will rewatch this'],
-  orig:['','Done a thousand times','Slight twist on familiar','Fresh angle on content','Genuinely different idea','Never been done like this'],
+const SLIDER_DESCS = {
+  trend: ['','Unlikely to be searched','Low search demand','Riding a current wave','Highly trending topic','Viral moment — act fast'],
+  hook: ['','Weak opening concept','Some intrigue present','Solid opening premise','Very compelling hook','Unmissable first 5 seconds'],
+  ret: ['','Viewers will drop off fast','Some engaging moments','Keeps viewers watching','Strong pacing & payoff','People will rewatch this'],
+  orig: ['','Done a thousand times','Slight twist on familiar','Fresh angle on content','Genuinely different idea','Never been done like this'],
 };
-function syncVal(k,v){
-  document.getElementById('val-'+k).textContent=v;
-  document.getElementById('desc-'+k).textContent=SLIDER_DESCS[k][parseInt(v)];
+
+const VIEW_LABELS = ['','1k views','30k views','60k views','200k views','1M views'];
+const VIEW_SCORE_THRESHOLDS = [0, 5, 9, 13, 17, 20];
+
+function syncVal(key, v) {
+  document.getElementById('val-' + key).textContent = v;
+  document.getElementById('desc-' + key).textContent = SLIDER_DESCS[key][parseInt(v)];
 }
-function scoreToViews(s){
-  if(s>=18)return{label:'1M views',color:'#ffd60a'};
-  if(s>=15)return{label:'200k views',color:'#30d158'};
-  if(s>=11)return{label:'60k views',color:'#0a84ff'};
-  if(s>=7)return{label:'30k views',color:'#5ac8fa'};
-  return{label:'1k views',color:'#8e8e93'};
+
+let ideas = JSON.parse(localStorage.getItem('visionary_ideas') || '[]');
+
+function save() { localStorage.setItem('visionary_ideas', JSON.stringify(ideas)); }
+
+function calcScore(t,h,r,o) { return parseInt(t)+parseInt(h)+parseInt(r)+parseInt(o); }
+
+function scoreToViews(score) {
+  if (score >= 18) return '1M views';
+  if (score >= 15) return '200k views';
+  if (score >= 11) return '60k views';
+  if (score >= 7)  return '30k views';
+  return '1k views';
 }
-let ideas=JSON.parse(localStorage.getItem('vis_ideas')||'[]');
-function saveIdeas(){localStorage.setItem('vis_ideas',JSON.stringify(ideas));}
-function addIdea(){
-  const title=document.getElementById('idea-input').value.trim();
-  if(!title)return document.getElementById('idea-input').focus();
-  const sliders=['trend','hook','ret','orig'];
-  const vals={};
-  sliders.forEach(k=>{vals[k]=document.querySelector(`input[oninput="syncVal('${k}',this.value)"]`).value;});
-  const score=sliders.reduce((a,k)=>a+parseInt(vals[k]),0);
-  ideas.push({id:Date.now(),title,...vals,score});
-  saveIdeas();
-  document.getElementById('idea-input').value='';
-  renderRanker();
+
+function scoreToViewsColor(score) {
+  if (score >= 18) return '#ffd60a';
+  if (score >= 15) return '#30d158';
+  if (score >= 11) return '#0a84ff';
+  if (score >= 7)  return '#5ac8fa';
+  return '#8e8e93';
 }
-function deleteIdea(id){ideas=ideas.filter(i=>i.id!==id);saveIdeas();renderRanker();}
-function clearIdeas(){if(confirm('Clear all ranked ideas?')){ideas=[];saveIdeas();renderRanker();}}
-function renderRanker(){
-  const sorted=[...ideas].sort((a,b)=>b.score-a.score);
-  document.getElementById('idea-count').textContent=ideas.length+(ideas.length===1?' idea':' ideas');
-  const empty=document.getElementById('ranker-empty');
-  const section=document.getElementById('rankings-section');
-  if(!sorted.length){empty.style.display='block';section.style.display='none';return;}
-  empty.style.display='none';section.style.display='block';
-  document.getElementById('rankings-list').innerHTML=sorted.map((idea,i)=>{
-    const rank=i+1;const pct=Math.round(idea.score/20*100);const v=scoreToViews(idea.score);
-    return`<div class="rank-card${rank===1?' rank-1':''}" style="animation-delay:${i*0.05}s">
-      <div class="rank-number">${rank}${rank===1?'<div style="font-size:11px;color:var(--gold)">✦</div>':''}</div>
-      <div>
-        <div class="rank-idea-title">${esc(idea.title)}</div>
+
+function addIdea() {
+  const title = document.getElementById('idea-input').value.trim();
+  if (!title) { document.getElementById('idea-input').focus(); return; }
+  const t = document.getElementById('sl-trend').value;
+  const h = document.getElementById('sl-hook').value;
+  const r = document.getElementById('sl-ret').value;
+  const o = document.getElementById('sl-orig').value;
+  const score = calcScore(t,h,r,o);
+  ideas.push({ id: Date.now(), title, t, h, r, o, score });
+  save();
+  document.getElementById('idea-input').value = '';
+  render();
+}
+
+document.getElementById('idea-input').addEventListener('keydown', e => { if(e.key==='Enter') addIdea(); });
+
+function deleteIdea(id) {
+  ideas = ideas.filter(i => i.id !== id);
+  save();
+  render();
+}
+
+function clearAll() {
+  if (!confirm('Clear all ranked ideas?')) return;
+  ideas = [];
+  save();
+  render();
+}
+
+function render() {
+  const sorted = [...ideas].sort((a,b) => b.score - a.score);
+  const list = document.getElementById('rankings-list');
+  const empty = document.getElementById('empty-state');
+  const section = document.getElementById('rankings-section');
+  document.getElementById('idea-count').textContent = ideas.length + (ideas.length === 1 ? ' idea ranked' : ' ideas ranked');
+
+  if (sorted.length === 0) {
+    section.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  section.style.display = 'block';
+  empty.style.display = 'none';
+
+  list.innerHTML = sorted.map((idea, i) => {
+    const rank = i + 1;
+    const pct = Math.round((idea.score / 20) * 100);
+    const views = scoreToViews(idea.score);
+    const vcolor = scoreToViewsColor(idea.score);
+    const isTop = rank === 1;
+    return `
+    <div class="rank-card${isTop ? ' rank-1' : ''}" style="animation-delay:${i*0.05}s">
+      <div class="rank-number">${rank}${isTop ? '<div class="crown">✦</div>' : ''}</div>
+      <div class="rank-info">
+        <div class="rank-idea-title">${escHtml(idea.title)}</div>
         <div class="rank-pills">
-          <div class="pill pill-trend">Trend ${idea.trend}</div>
-          <div class="pill pill-hook">Hook ${idea.hook}</div>
-          <div class="pill pill-ret">Retention ${idea.ret}</div>
-          <div class="pill pill-orig">Original ${idea.orig}</div>
+          <div class="pill pill-trend">Trend ${idea.t}</div>
+          <div class="pill pill-hook">Hook ${idea.h}</div>
+          <div class="pill pill-ret">Retention ${idea.r}</div>
+          <div class="pill pill-orig">Original ${idea.o}</div>
         </div>
         <div class="score-bar-wrap">
           <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%"></div></div>
-          <span style="font-size:11px;color:var(--text-faint)">${pct}%</span>
+          <span style="font-size:11px;color:var(--text-faint);white-space:nowrap">${pct}%</span>
         </div>
       </div>
       <div class="rank-right">
         <div class="rank-score">${idea.score}</div>
         <div class="rank-score-label">/ 20 pts</div>
-        <div class="rank-views" style="color:${v.color}">${v.label}</div>
+        <div class="rank-views" style="color:${vcolor}">${views}</div>
         <div class="rank-views-label">predicted</div>
-        <button class="delete-btn" onclick="deleteIdea(${idea.id})">✕</button>
+        <button class="delete-btn" onclick="deleteIdea(${idea.id})" title="Remove">✕</button>
       </div>
     </div>`;
   }).join('');
 }
-renderRanker();
 
-// ─── API KEY ───────────────────────────────────────────────
-let apiKey=localStorage.getItem('vis_yt_key')||'';
-if(apiKey){
-  document.getElementById('api-key-input').value=apiKey;
-  document.getElementById('key-status').textContent='✓ Key loaded from storage';
-  document.getElementById('key-status').className='key-status ok';
-}
-function onKeyInput(){
-  document.getElementById('key-status').textContent='';
-}
-function saveKey(){
-  const k=document.getElementById('api-key-input').value.trim();
-  if(!k){document.getElementById('key-status').textContent='Please paste a key first.';document.getElementById('key-status').className='key-status err';return;}
-  apiKey=k;localStorage.setItem('vis_yt_key',k);
-  document.getElementById('key-status').textContent='✓ Key saved securely in your browser';
-  document.getElementById('key-status').className='key-status ok';
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ─── COMPETITOR TRACKER ────────────────────────────────────
-let competitors=JSON.parse(localStorage.getItem('vis_competitors')||'[]');
-function saveCompetitors(){localStorage.setItem('vis_competitors',JSON.stringify(competitors));}
-
-let searchTimer=null;
-function onSearchInput(){clearTimeout(searchTimer);searchTimer=setTimeout(()=>{},400);}
-
-async function ytFetch(url){
-  const res=await fetch(url);
-  if(!res.ok)throw new Error('YouTube API error '+res.status);
-  return res.json();
-}
-
-async function searchChannels(){
-  const q=document.getElementById('channel-search').value.trim();
-  if(!q)return;
-  if(!apiKey){
-    document.getElementById('search-status').textContent='⚠ Please save your API key first.';
-    return;
-  }
-  const btn=document.getElementById('search-btn');
-  const status=document.getElementById('search-status');
-  btn.innerHTML='<span class="spinner"></span>Searching…';btn.disabled=true;
-  status.textContent='';
-  const results=document.getElementById('search-results');
-  results.innerHTML='';results.classList.remove('show');
-  try{
-    const data=await ytFetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(q)}&maxResults=5&key=${apiKey}`);
-    if(!data.items||!data.items.length){status.textContent='No channels found. Try a different name.';return;}
-    results.innerHTML=data.items.map(item=>`
-      <div class="search-result-item" onclick="addCompetitor('${esc(item.snippet.channelId)}','${esc(item.snippet.channelTitle)}','${esc(item.snippet.thumbnails?.default?.url||'')}')">
-        <img src="${esc(item.snippet.thumbnails?.default?.url||'')}" onerror="this.style.display='none'" width="36" height="36" style="border-radius:50%;"/>
-        <div>
-          <div class="search-result-name">${esc(item.snippet.channelTitle)}</div>
-          <div class="search-result-subs">Click to track</div>
-        </div>
-      </div>`).join('');
-    results.classList.add('show');
-  }catch(e){
-    status.textContent='Error: '+(e.message||'Check your API key and try again.');
-  }finally{
-    btn.innerHTML='Search';btn.disabled=false;
-  }
-}
-
-async function addCompetitor(channelId,name,thumb){
-  document.getElementById('search-results').classList.remove('show');
-  document.getElementById('channel-search').value='';
-  if(competitors.find(c=>c.channelId===channelId)){
-    document.getElementById('search-status').textContent='Already tracking this channel.';return;
-  }
-  document.getElementById('search-status').innerHTML='<span class="spinner"></span>Fetching channel data…';
-  try{
-    const [chanData,vidData]=await Promise.all([
-      ytFetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${apiKey}`),
-      fetchLatestVideos(channelId)
-    ]);
-    const ch=chanData.items[0];
-    const comp={
-      channelId,
-      name:ch.snippet.title,
-      handle:ch.snippet.customUrl||'',
-      thumb:ch.snippet.thumbnails?.medium?.url||thumb,
-      subs:ch.statistics.subscriberCount,
-      totalViews:ch.statistics.viewCount,
-      videoCount:ch.statistics.videoCount,
-      videos:vidData,
-      addedAt:new Date().toISOString(),
-      lastRefreshed:new Date().toISOString(),
-    };
-    competitors.unshift(comp);
-    saveCompetitors();
-    renderCompetitors();
-    document.getElementById('search-status').textContent='';
-  }catch(e){
-    document.getElementById('search-status').textContent='Error: '+(e.message||'Could not fetch channel data.');
-  }
-}
-
-async function fetchLatestVideos(channelId){
-  const searchData=await ytFetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&maxResults=8&type=video&key=${apiKey}`);
-  if(!searchData.items||!searchData.items.length)return[];
-  const ids=searchData.items.map(i=>i.id.videoId).join(',');
-  const statsData=await ytFetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${ids}&key=${apiKey}`);
-  return statsData.items.map(v=>({
-    id:v.id,
-    title:v.snippet.title,
-    thumb:v.snippet.thumbnails?.medium?.url||'',
-    publishedAt:v.snippet.publishedAt,
-    views:v.statistics.viewCount||0,
-    likes:v.statistics.likeCount||0,
-  }));
-}
-
-async function refreshCompetitor(channelId){
-  if(!apiKey)return;
-  const comp=competitors.find(c=>c.channelId===channelId);
-  if(!comp)return;
-  try{
-    const [chanData,vidData]=await Promise.all([
-      ytFetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${apiKey}`),
-      fetchLatestVideos(channelId)
-    ]);
-    const ch=chanData.items[0];
-    comp.subs=ch.statistics.subscriberCount;
-    comp.totalViews=ch.statistics.viewCount;
-    comp.videos=vidData;
-    comp.lastRefreshed=new Date().toISOString();
-    saveCompetitors();
-    renderCompetitors();
-  }catch(e){console.error(e);}
-}
-
-function removeCompetitor(channelId){
-  if(!confirm('Remove this competitor?'))return;
-  competitors=competitors.filter(c=>c.channelId!==channelId);
-  saveCompetitors();
-  renderCompetitors();
-}
-
-function toggleComp(channelId){
-  const card=document.getElementById('comp-'+channelId);
-  card.classList.toggle('open');
-}
-
-function renderCompetitors(){
-  const empty=document.getElementById('comp-empty');
-  const list=document.getElementById('comp-list');
-  if(!competitors.length){empty.style.display='block';list.innerHTML='';return;}
-  empty.style.display='none';
-  list.innerHTML=competitors.map((comp,ci)=>{
-    const topVideo=comp.videos&&comp.videos.length?comp.videos.reduce((a,b)=>parseInt(a.views)>parseInt(b.views)?a:b,comp.videos[0]):null;
-    return`<div class="comp-card" id="comp-${esc(comp.channelId)}">
-      <div class="comp-header" onclick="toggleComp('${esc(comp.channelId)}')">
-        ${comp.thumb?`<img class="comp-avatar" src="${esc(comp.thumb)}" onerror="this.outerHTML='<div class=comp-avatar-placeholder>${esc(comp.name[0])}</div>'">`:`<div class="comp-avatar-placeholder">${esc(comp.name[0])}</div>`}
-        <div class="comp-meta">
-          <div class="comp-name">${esc(comp.name)}</div>
-          <div class="comp-handle">${comp.handle?esc(comp.handle):'Refreshed '+timeAgo(comp.lastRefreshed)}</div>
-          <div class="comp-stats-row">
-            <div class="comp-stat"><strong>${fmtNum(comp.subs)}</strong> subs</div>
-            <div class="comp-stat"><strong>${fmtNum(comp.totalViews)}</strong> total views</div>
-            <div class="comp-stat"><strong>${comp.videoCount||'?'}</strong> videos</div>
-          </div>
-        </div>
-        <button class="comp-remove" onclick="event.stopPropagation();removeCompetitor('${esc(comp.channelId)}')" title="Remove">✕</button>
-        <button class="btn-outline" onclick="event.stopPropagation();refreshCompetitor('${esc(comp.channelId)}')" style="padding:6px 12px;font-size:11px;margin-right:8px;flex-shrink:0;">↻ Refresh</button>
-        <div class="comp-chevron">⌄</div>
-      </div>
-      <div class="comp-videos">
-        ${topVideo?`<div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);padding:12px 0 8px;">Top video this batch</div>
-        <div class="video-row" style="background:var(--surface3);border-radius:10px;padding:12px;margin-bottom:8px;">
-          ${topVideo.thumb?`<img class="video-thumb" src="${esc(topVideo.thumb)}">`:''}
-          <div class="video-info">
-            <div class="video-title">${esc(topVideo.title)}</div>
-            <div class="video-meta">${timeAgo(topVideo.publishedAt)} · ${fmtNum(topVideo.likes)} likes</div>
-          </div>
-          <div class="video-views">${fmtNum(topVideo.views)}</div>
-        </div>`:''}
-        <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);padding:8px 0;">Latest videos</div>
-        ${(comp.videos||[]).map(v=>`<div class="video-row">
-          ${v.thumb?`<img class="video-thumb" src="${esc(v.thumb)}">`:'<div class="video-thumb"></div>'}
-          <div class="video-info">
-            <div class="video-title">${esc(v.title)}</div>
-            <div class="video-meta">${timeAgo(v.publishedAt)}</div>
-          </div>
-          <div class="video-views">${fmtNum(v.views)}</div>
-        </div>`).join('')}
-        ${!comp.videos||!comp.videos.length?'<div style="color:var(--text-faint);font-size:13px;padding:1rem 0;">No videos found.</div>':''}
-      </div>
-    </div>`;
-  }).join('');
-}
-renderCompetitors();
-
-// Close search results on outside click
-document.addEventListener('click',e=>{
-  if(!e.target.closest('#channel-search')&&!e.target.closest('#search-results')){
-    document.getElementById('search-results').classList.remove('show');
-  }
-});
+render();
 </script>
 </body>
 </html>
